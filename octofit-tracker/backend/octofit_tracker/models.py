@@ -3,16 +3,21 @@ from djongo import models
 
 class User(models.Model):
     _id = models.ObjectIdField()
-    username = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    username = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    superhero_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
+    password = models.CharField(max_length=255, blank=True, null=True)
+    team_id = models.CharField(max_length=100, blank=True, null=True)
+    avatar = models.CharField(max_length=10, blank=True, null=True)
+    total_points = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'users'
 
     def __str__(self):
-        return self.username
+        return self.name or self.username or self.email
 
 
 class Team(models.Model):
@@ -32,10 +37,12 @@ class Team(models.Model):
 class Activity(models.Model):
     _id = models.ObjectIdField()
     user_id = models.CharField(max_length=24)  # ObjectId as string
+    workout_id = models.CharField(max_length=50, blank=True, null=True)
     activity_type = models.CharField(max_length=50)
-    duration = models.IntegerField()  # in minutes
+    duration_minutes = models.IntegerField(null=True, blank=True)  # in minutes
     distance = models.FloatField(null=True, blank=True)  # in km
-    calories = models.IntegerField()
+    calories_burned = models.IntegerField(null=True, blank=True)
+    points_earned = models.IntegerField(null=True, blank=True)
     date = models.DateTimeField()
     notes = models.TextField(blank=True)
 
